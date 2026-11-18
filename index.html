@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>VEYRA</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+        <meta name="description" content="VEYRA: a zombie outbreak RTS on real cities, played in the browser.">
+        <link rel="icon" type="image/png" href="favicon.png">
+        <style>
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: #000;
+                height: 100vh;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+            #canvas {
+                border: none;
+            }
+            #message {
+                position: fixed;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 16px;
+                color: #e8ecf2;
+                font: 16px/1.5 system-ui, sans-serif;
+                text-align: center;
+            }
+            #message[hidden] {
+                display: none;
+            }
+        </style>
+    </head>
+    <body oncontextmenu="return false">
+        <div>
+            <canvas id="canvas"></canvas>
+        </div>
+        <div id="message" hidden>
+            <p>Your browser can't run VEYRA (it needs WebAssembly GC): please use a recent Chrome, Edge, Firefox or Safari.<br><br>
+            Ton navigateur ne peut pas lancer VEYRA (il lui faut WebAssembly GC) : utilise un Chrome, Edge, Firefox ou Safari récent.</p>
+        </div>
+        <script>
+            async function start() {
+                try {
+                    let teavm = await TeaVM.wasmGC.load("app.wasm");
+                    teavm.exports.main([]);
+                } catch (e) {
+                    console.error(e);
+                    document.getElementById("message").hidden = false;
+                }
+            }
+            window.addEventListener("load", start);
+        </script>
+        <script type="text/javascript" charset="utf-8" src="app.wasm-runtime.js"></script>
+    </body>
+</html>
